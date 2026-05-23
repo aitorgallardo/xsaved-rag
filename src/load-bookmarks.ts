@@ -1,0 +1,43 @@
+import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import type { BookmarkLite } from "./types.js";
+
+export async function loadBookmarks(
+  path: string,
+  limit: number
+): Promise<BookmarkLite[]> {
+  const absolute = resolve(path);
+  const raw = await readFile(absolute, "utf-8");
+  const all = JSON.parse(raw) as RawBookmark[];
+
+  return all.slice(0, limit).map((b) => ({
+    id: b.id,
+    text: b.text,
+    author: b.author,
+    notes: b.notes,
+    tags: Array.isArray(b.tags) ? b.tags : [],
+    createdAt: b.created_at,
+    bookmarkedAt: b.bookmarked_at,
+  }));
+}
+
+export function buildChunkText(b: BookmarkLite): string {
+  return [
+    `Author: @${b.author}`,
+    b.tags.length > 0 ? `Tags: ${b.tags.join(", ")}` : null,
+    b.notes ? `Notes: ${b.notes}` : null,
+    `Tweet: ${b.text}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+interface RawBookmark {
+  id: string;
+  text: string;
+  author: string;
+  notes?: string;
+  tags?: string[];
+  created_at: string;
+  bookmarked_at: string;
+}

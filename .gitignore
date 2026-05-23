@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+output/
+education/
+data/*.json
+PLAN.md
+LEARNING.md
