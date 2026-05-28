@@ -4,6 +4,8 @@ import type { SearchHit } from "../types.js";
 
 const RRF_K = 60;
 const PER_LEG_K = 20;
+const VECTOR_WEIGHT = Number(process.env.HYBRID_VECTOR_WEIGHT ?? 1);
+const KEYWORD_WEIGHT = Number(process.env.HYBRID_KEYWORD_WEIGHT ?? 1);
 
 export async function hybridSearch(
   query: string,
@@ -17,12 +19,13 @@ export async function hybridSearch(
   const fused = new Map<string, { hit: SearchHit; score: number }>();
 
   for (const hit of vectorHits) {
-    fused.set(hit.bookmarkId, { hit, score: 1 / (RRF_K + hit.rank) });
+    const rrf = VECTOR_WEIGHT / (RRF_K + hit.rank);
+    fused.set(hit.bookmarkId, { hit, score: rrf });
   }
 
   for (const hit of keywordHits) {
     const existing = fused.get(hit.bookmarkId);
-    const rrf = 1 / (RRF_K + hit.rank);
+    const rrf = KEYWORD_WEIGHT / (RRF_K + hit.rank);
     if (existing) {
       fused.set(hit.bookmarkId, {
         hit: { ...existing.hit, keywordScore: hit.keywordScore },
