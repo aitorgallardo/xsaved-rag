@@ -5,10 +5,11 @@ import chalk from "chalk";
 import ora from "ora";
 import { vectorSearch } from "./search/vector.js";
 import { keywordSearch } from "./search/keyword.js";
+import { hybridSearch } from "./search/hybrid.js";
 import { closePool } from "./db.js";
 import { recallAtK, reciprocalRank, mean } from "./eval/metrics.js";
 
-type Strategy = "vector" | "keyword";
+type Strategy = "vector" | "keyword" | "hybrid";
 
 interface TestQuery {
   query: string;
@@ -31,7 +32,12 @@ const RESULTS_PATH =
   process.env.EVAL_RESULTS_PATH ?? `eval/results-${STRATEGY}.json`;
 const K_RETRIEVAL = 20;
 
-const search = STRATEGY === "keyword" ? keywordSearch : vectorSearch;
+const search =
+  STRATEGY === "keyword"
+    ? keywordSearch
+    : STRATEGY === "hybrid"
+      ? hybridSearch
+      : vectorSearch;
 
 async function main() {
   const raw = await readFile(resolve(QUERIES_PATH), "utf-8");

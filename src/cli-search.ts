@@ -2,10 +2,11 @@ import "dotenv/config";
 import chalk from "chalk";
 import { vectorSearch } from "./search/vector.js";
 import { keywordSearch } from "./search/keyword.js";
+import { hybridSearch } from "./search/hybrid.js";
 import { closePool } from "./db.js";
 import type { SearchHit } from "./types.js";
 
-type Strategy = "vector" | "keyword";
+type Strategy = "vector" | "keyword" | "hybrid";
 
 async function main() {
   const query = process.argv.slice(2).join(" ").trim();
@@ -20,7 +21,9 @@ async function main() {
   const hits: SearchHit[] =
     strategy === "keyword"
       ? await keywordSearch(query, k)
-      : await vectorSearch(query, k);
+      : strategy === "hybrid"
+        ? await hybridSearch(query, k)
+        : await vectorSearch(query, k);
 
   console.log(chalk.bold(`\nQuery: ${query}`));
   console.log(chalk.dim(`Strategy: ${strategy}   Top ${hits.length}\n`));
