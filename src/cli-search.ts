@@ -1,7 +1,11 @@
 import "dotenv/config";
 import chalk from "chalk";
 import { vectorSearch } from "./search/vector.js";
+import { keywordSearch } from "./search/keyword.js";
 import { closePool } from "./db.js";
+import type { SearchHit } from "./types.js";
+
+type Strategy = "vector" | "keyword";
 
 async function main() {
   const query = process.argv.slice(2).join(" ").trim();
@@ -10,16 +14,31 @@ async function main() {
     process.exit(1);
   }
 
+  const strategy = (process.env.SEARCH_STRATEGY ?? "vector") as Strategy;
   const k = Number(process.env.SEARCH_K ?? 5);
-  const hits = await vectorSearch(query, k);
+
+  const hits: SearchHit[] =
+    strategy === "keyword"
+      ? await keywordSearch(query, k)
+      : await vectorSearch(query, k);
 
   console.log(chalk.bold(`\nQuery: ${query}`));
-  console.log(chalk.dim(`Top ${hits.length} by cosine distance:\n`));
+  console.log(chalk.dim(`Strategy: ${strategy}   Top ${hits.length}\n`));
+
+  if (hits.length === 0) {
+    console.log(chalk.yellow("No matches."));
+    await closePool();
+    return;
+  }
 
   for (const hit of hits) {
     const head = chalk.cyan(`#${hit.rank}  @${hit.author}`);
-    const score = chalk.dim(`distance=${hit.distance.toFixed(4)}`);
-    const tags = hit.tags.length > 0 ? chalk.dim(`  [${hit.tags.join(", ")}]`) : "";
+    const score =
+      hit.distance !== undefined
+        ? chalk.dim(`distance=${hit.distance.toFixed(4)}`)
+        : chalk.dim(`score=${(hit.keywordScore ?? 0).toFixed(4)}`);
+    const tags =
+      hit.tags.length > 0 ? chalk.dim(`  [${hit.tags.join(", ")}]`) : "";
     console.log(`${head}  ${score}${tags}`);
     console.log(`     ${hit.text.replace(/\s+/g, " ").slice(0, 200)}`);
     if (hit.notes) console.log(chalk.dim(`     notes: ${hit.notes}`));

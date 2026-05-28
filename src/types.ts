@@ -14,6 +14,7 @@ export interface SearchHit {
   text: string;
   notes?: string;
   tags: string[];
-  distance: number;
   rank: number;
+  distance?: number;
+  keywordScore?: number;
 }

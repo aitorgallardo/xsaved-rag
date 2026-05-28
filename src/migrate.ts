@@ -14,6 +14,20 @@ CREATE TABLE IF NOT EXISTS bookmarks (
   synced_at     TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+ALTER TABLE bookmarks
+  ADD COLUMN IF NOT EXISTS text_search tsvector
+  GENERATED ALWAYS AS (
+    to_tsvector('english',
+      author || ' ' ||
+      coalesce(text, '') || ' ' ||
+      coalesce(notes, '') || ' ' ||
+      coalesce(tags::text, '')
+    )
+  ) STORED;
+
+CREATE INDEX IF NOT EXISTS bookmarks_text_search_gin
+  ON bookmarks USING gin(text_search);
+
 CREATE TABLE IF NOT EXISTS bookmark_embeddings (
   bookmark_id   TEXT PRIMARY KEY REFERENCES bookmarks(id) ON DELETE CASCADE,
   chunk_text    TEXT NOT NULL,
