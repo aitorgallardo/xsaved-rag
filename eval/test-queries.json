@@ -1,0 +1,77 @@
+[
+  {
+    "query": "Elon Musk on Starship and rockets",
+    "relevant_bookmark_ids": [
+      "2033938785499771223",
+      "1992505464232546361",
+      "1979746018498654274",
+      "1978859366829662661",
+      "2003906330000871463",
+      "2014599611948675140",
+      "2033669840138068046",
+      "2037363930956476575"
+    ]
+  },
+  {
+    "query": "Claude Code as a development tool",
+    "relevant_bookmark_ids": [
+      "2038454336355999749",
+      "2035077141050622173",
+      "2036850783526719610"
+    ]
+  },
+  {
+    "query": "multi-agent orchestration in AI",
+    "relevant_bookmark_ids": [
+      "2037188879422292467",
+      "2036845273117581676"
+    ]
+  },
+  {
+    "query": "how to develop good taste",
+    "relevant_bookmark_ids": [
+      "2033570076083753157"
+    ]
+  },
+  {
+    "query": "design resources and tools for engineers",
+    "relevant_bookmark_ids": [
+      "2031044789731237907",
+      "2034332847893574080",
+      "2036103232104354135"
+    ]
+  },
+  {
+    "query": "OpenAI GPT release news",
+    "relevant_bookmark_ids": [
+      "2029620984853188738"
+    ]
+  },
+  {
+    "query": "bearish call on the stock market",
+    "relevant_bookmark_ids": [
+      "2018368999046762948",
+      "2010041448486580639"
+    ]
+  },
+  {
+    "query": "advice on personal growth and mindset",
+    "relevant_bookmark_ids": [
+      "2039800708959191459",
+      "2029623543118410009",
+      "1895585955144458389"
+    ]
+  },
+  {
+    "query": "Jensen Huang on what makes a great engineer",
+    "relevant_bookmark_ids": [
+      "2035384304046338084"
+    ]
+  },
+  {
+    "query": "Anthropic SWE interview questions",
+    "relevant_bookmark_ids": [
+      "2031056001399693374"
+    ]
+  }
+]

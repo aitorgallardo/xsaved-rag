@@ -6,7 +6,8 @@
   "scripts": {
     "db:migrate": "tsx src/cli-migrate.ts",
     "index": "tsx src/cli-index.ts",
-    "search": "tsx src/cli-search.ts"
+    "search": "tsx src/cli-search.ts",
+    "eval": "tsx src/cli-eval.ts"
   },
   "dependencies": {
     "chalk": "^5.6.2",
