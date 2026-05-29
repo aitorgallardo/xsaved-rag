@@ -8,6 +8,7 @@
     "index": "tsx src/cli-index.ts",
     "search": "tsx src/cli-search.ts",
     "eval": "tsx src/cli-eval.ts",
+    "eval:gen": "tsx src/cli-eval-gen.ts",
     "ask": "tsx src/cli-ask.ts"
   },
   "dependencies": {

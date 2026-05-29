@@ -1,0 +1,209 @@
+{
+  "strategy": "vector",
+  "summary": {
+    "meanFaithfulness": 9.9,
+    "meanCompleteness": 9.6,
+    "meanConciseness": 8.6,
+    "passRate": 1,
+    "totalGenTokens": {
+      "in": 23012,
+      "out": 3529
+    },
+    "totalJudgeTokens": {
+      "in": 14732,
+      "out": 572
+    }
+  },
+  "results": [
+    {
+      "query": "Elon Musk on Starship and rockets",
+      "answer": "Based on your bookmarks, here's a summary of Elon Musk's thoughts on Starship and rockets:\n\n- Musk describes Starship as a **\"planet-colonizer class rocket\"** — and notably calls it the **first** of its kind.\n\n- He emphasizes the sheer scale of that mission, noting that it makes **every other space transport task trivial** by comparison.\n\n- He has also referenced a **Starship V3 Super Heavy Rocket**, suggesting ongoing iteration of the vehicle.\n\nOn broader rocket milestones:\n\n- SpaceX achieved **2 heavy-class rocket flights in just 10 hours**.\n- The company has now surpassed **500 rocket landings**.",
+      "scores": {
+        "faithfulness": 10,
+        "completeness": 10,
+        "conciseness": 9,
+        "overall": "pass",
+        "issues": ""
+      },
+      "genTokens": {
+        "in": 1179,
+        "out": 249
+      },
+      "judgeTokens": {
+        "in": 736,
+        "out": 36
+      }
+    },
+    {
+      "query": "Claude Code as a development tool",
+      "answer": "Based on your bookmarks, here's what's captured about Claude Code as a development tool:\n\n1. **Claude Code for Design**: @steveschoger put together a one-hour video on how he's been using Claude Code as his **primary design tool**, packed with design tips.\n\n2. **Hidden & Under-utilized Features**: @bcherny shared a collection of his favorite hidden and under-utilized features in Claude Code, focusing on the ones he uses most.\n\nThese bookmarks suggest Claude Code is being used both as a **coding assistant** and a **design tool**, with a community of practitioners sharing tips and workflows around it. However, the bookmarks don't go into deep technical detail — you may want to follow up on the linked video and feature thread directly for the full content.",
+      "scores": {
+        "faithfulness": 10,
+        "completeness": 9,
+        "conciseness": 9,
+        "overall": "pass",
+        "issues": "Minor: the answer mentions Claude Code as a 'coding assistant' which is implied but not explicitly stated in the retrieved chunks. Otherwise faithful and well-scoped."
+      },
+      "genTokens": {
+        "in": 1548,
+        "out": 209
+      },
+      "judgeTokens": {
+        "in": 927,
+        "out": 70
+      }
+    },
+    {
+      "query": "multi-agent orchestration in AI",
+      "answer": "Based on your bookmarks, here's a synthesis of what's being said about multi-agent orchestration in AI:\n\n---\n\n### Key Challenges\n\nEvery multi-agent flow of frontier models currently suffers from two main problems:\n1. **Inference latency** — most of the time you're just waiting on inference while the agent works in the background, which can take 8–10 minutes fairly regularly, making the wait time very expensive productivity-wise.\n2. **Task isolation** — when working on the same mutating source code with multiple agents in parallel, you inevitably run into countless merge conflicts.\n\n---\n\n### Solutions & Best Practices\n\n**Kanban-style orchestration:**\nA kanban board solves both problems by giving you the ability to act as an engineering manager for your individual agents, watching them cleanly with a clear headline-level outlook of every parallel agent.\n\n**Git worktree isolation:**\nOne agent, one git worktree. Isolation is not overhead — it is how you run agents in parallel without them stepping on each other.\n\n**Harness engineering over model choice:**\nThe best AI teams are not winning on models — they are winning on harness engineering, and almost nobody is talking about it. Key principles include:\n\n- The context window is not a RAM slot. Every irrelevant token you dump into it competes with information that actually matters, and the model does not cleanly ignore the noise.\n- A persistent progress file is the cheapest fix in agentic systems that almost nobody uses. Continuity across context window boundaries is not a hard problem — it is a text file the agent reads at start and writes at the end.\n- Your agent's ceiling is your feedback loop. If it cannot see the consequences of what it built, it cannot fix what actually broke.\n\n---\n\n### The Bigger Picture\n\nWhat's being described is a fundamental shift in leverage. Every top engineer will eventually manage 100 AI agents — not as a distant concept but as a near-term operating reality. The job stops being about doing the work yourself; it becomes about directing, evaluating, and iterating with a digital team that never sleeps.\n\nTeams that master working with agents will outproduce teams twice their size running on traditional workflows, and the gap between those two groups is going to widen fast.",
+      "scores": {
+        "faithfulness": 10,
+        "completeness": 9,
+        "conciseness": 7,
+        "overall": "pass",
+        "issues": "The answer is somewhat verbose with extensive headers and formatting that adds visual bulk without adding information density; the content itself is fully faithful and covers all relevant chunks well."
+      },
+      "genTokens": {
+        "in": 3142,
+        "out": 702
+      },
+      "judgeTokens": {
+        "in": 2177,
+        "out": 68
+      }
+    },
+    {
+      "query": "how to develop good taste",
+      "answer": "Based on your bookmarks, here's how to develop good taste:\n\nThe process has three steps: **copy others**, **learn the rules**, and **study history to understand *why* the rules are the rules**. Good taste is likened to a language.\n\nHaving good taste means \"speaking the right words\" so you can express what you're trying to say.\n\nDave Grohl is used as an example — he learned the fundamentals of drumming by copying others, then drew from history to create something new but effective in the language he wanted to speak (grunge). That's defined as good taste.\n\nIn short: **imitate → internalize the rules → understand their origins** — then you can start making something genuinely your own.",
+      "scores": {
+        "faithfulness": 10,
+        "completeness": 10,
+        "conciseness": 9,
+        "overall": "pass",
+        "issues": ""
+      },
+      "genTokens": {
+        "in": 1754,
+        "out": 224
+      },
+      "judgeTokens": {
+        "in": 1038,
+        "out": 36
+      }
+    },
+    {
+      "query": "design resources and tools for engineers",
+      "answer": "Here are some relevant bookmarks about design resources and tools for engineers:\n\n1. **DesEngs Resource Collection** – There's a curated, ever-growing collection of resources specifically for design engineers called **DesEngs**.\n\n2. **Avoiding \"AI Slop\" in Web Apps** – A GitHub repo was built with tools to help stop shipping AI slop — aimed at making web apps look like a designer built them, avoiding generic output, and stopping you from writing like a LinkedIn influencer.\n\n3. **Using Claude Code as a Design Tool** – There's a one-hour video on using **Claude Code** as a primary design tool, packed with design tips.\n\n4. **Claude on Mobile for Design Workflows** – Claude's work tools are now available on mobile, allowing you to explore Figma designs, create Canva slides, and check Amplitude dashboards from your phone.\n\nThese range from curated resource collections to practical tools and workflows that can help engineers produce more polished, designer-quality work.",
+      "scores": {
+        "faithfulness": 10,
+        "completeness": 9,
+        "conciseness": 9,
+        "overall": "pass",
+        "issues": "The font_web chunk about Browserbase diagrams and illustration methods was not incorporated, but it's marginally relevant so omission is acceptable."
+      },
+      "genTokens": {
+        "in": 1437,
+        "out": 296
+      },
+      "judgeTokens": {
+        "in": 947,
+        "out": 66
+      }
+    },
+    {
+      "query": "OpenAI GPT release news",
+      "answer": "Based on your bookmarks, here is the GPT release news:\n\nGPT-5.4 has been released. It comes with several key capabilities:\n\n- **Native computer-use capabilities**\n- **Up to 1M tokens of context** in Codex and the API\n- **Best-in-class agentic coding** for complex tasks\n- **Scalable tool search** across larger ecosystems, and **more efficient reasoning** for long, tool-heavy workflows",
+      "scores": {
+        "faithfulness": 10,
+        "completeness": 10,
+        "conciseness": 10,
+        "overall": "pass",
+        "issues": ""
+      },
+      "genTokens": {
+        "in": 2488,
+        "out": 195
+      },
+      "judgeTokens": {
+        "in": 1354,
+        "out": 36
+      }
+    },
+    {
+      "query": "bearish call on the stock market",
+      "answer": "Based on your bookmarks, here is a synthesis of the bearish case for the stock market:\n\n**Smart Money Is Heading for the Exits**\n\nOne investor with 20+ years of experience announced going 95% out of the market with the S&P 500 at 6,983. Meanwhile, Peter Thiel has liquidated all of his stock holdings, including $AAPL, and now owns zero shares in any company. And Warren Buffett is sitting on a $300B+ pile of cash, aggressively selling into the rally — not to buy the dip, but to survive a crash.\n\n**The AI Bubble Argument**\n\nBig Tech is burning enormous capital chasing the AI narrative — $400B in AI capex against only ~$20B in revenue return. To justify this spend, they would need $2 trillion in new revenue by 2030. That isn't an investment — it's a bubble.\n\n**Insider Distribution at the Top**\n\nThe smartest founders in history are all rushing to the exit at the same time — SpaceX, OpenAI, Databricks, and Anthropic are aggressively targeting 2026 IPOs with a combined $4T valuation. They aren't selling because they need cash — they're selling because they've identified the top. This setup has been seen twice before: the 2000 Dotcom crash and 2021 SPAC mania, where insiders used the window to distribute shares at unsupportable valuations (100x revenue).\n\n**The 2026 Debt Wall**\n\nThere's also the 2026 debt wall: zombie companies that survived on 0% interest rates now have to refinance billions at significantly higher rates, and most won't survive it.",
+      "scores": {
+        "faithfulness": 10,
+        "completeness": 10,
+        "conciseness": 8,
+        "overall": "pass",
+        "issues": "The answer is thorough and accurate but slightly verbose — some quoted phrases from the source could be paraphrased to tighten the response."
+      },
+      "genTokens": {
+        "in": 3239,
+        "out": 577
+      },
+      "judgeTokens": {
+        "in": 1917,
+        "out": 66
+      }
+    },
+    {
+      "query": "advice on personal growth and mindset",
+      "answer": "Here are some key themes from your bookmarks on personal growth and mindset:\n\n**Action over perfection**\n\nThe mindset of \"I'll figure it out\" can take you further than any plan you've ever made — prioritising action over perfect preparation.\n\n**Hunger and relentlessness**\n\nAccording to Tony Robbins, what the most successful people have in common is hunger that does not go away — the hunger to be more, do more, give more, and share more. Crucially, it's not just hunger to reach a goal, but an insatiable hunger paired with the relentlessness to push through all obstacles.\n\n**Every day is a choice**\n\nEvery day you're either ascending or descending. It shows up in every small decision — meal choices, workouts, the quality of feedback you give, your openness to others' feedback, how you show up for family and friends, and the love you put out.\n\n**Develop unique, non-conventional skills**\n\nFor people with \"normal-shaped skills,\" it's increasingly an inversion — what used to be valuable is becoming less so. The key is learning to be more of an artist, look at things from a different direction, and build something unique.\n\nThe through-line across all of these: growth comes from consistent action, insatiable curiosity, and cultivating what makes you distinctly *you*.",
+      "scores": {
+        "faithfulness": 9,
+        "completeness": 9,
+        "conciseness": 8,
+        "overall": "pass",
+        "issues": "The closing 'through-line' synthesis introduces a slight inference ('insatiable curiosity') not directly stated in the chunks, but it's minor and doesn't significantly distort the content. The pmarca chunk is appropriately omitted as it doesn't add actionable advice."
+      },
+      "genTokens": {
+        "in": 1630,
+        "out": 391
+      },
+      "judgeTokens": {
+        "in": 1170,
+        "out": 94
+      }
+    },
+    {
+      "query": "Jensen Huang on what makes a great engineer",
+      "answer": "Based on your bookmarks, here's a summary of Jensen Huang's views on what makes a great engineer:\n\n**AI Token Spending as the New Benchmark**\n\nJensen Huang has changed his benchmark for what makes a great engineer, and it has nothing to do with the quality of their code. His new standard: if a $500,000/year engineer isn't spending at least $250,000 on AI tokens annually, something is seriously wrong.\n\nAn engineer ignoring AI tools in 2026 is compared to a chip designer who refuses to give up paper and pencil when CAD tools exist — the technology is available, and choosing not to use it is no longer a personal preference, it's a professional red flag.\n\n**The Scale of Nvidia's Commitment**\n\nNvidia is targeting roughly $2 billion a year in AI token spending just for its engineering workforce. With around 8,000 engineers, that works out to approximately $250,000 per person — a second budget paid entirely to machines working alongside them.\n\n**A Fundamental Shift in the Engineer's Role**\n\nEvery top engineer will eventually manage 100 AI agents — not as a distant concept but as a near-term reality. The job stops being about doing the work yourself; it becomes about directing, evaluating, and iterating with a digital team that never sleeps.\n\n**The LeBron Analogy**\n\nHuang compared it to LeBron James spending a million dollars a year maintaining his body and still playing at the highest level at 41 — the logic being that if someone is world-class talent, you give them world-class resources and get out of the way.\n\n**Why It Matters**\n\nEngineers who build this muscle early will have a significant edge. Teams that master working with agents will outproduce teams twice their size running on traditional workflows — and the gap between those two groups is going to widen fast.",
+      "scores": {
+        "faithfulness": 10,
+        "completeness": 10,
+        "conciseness": 8,
+        "overall": "pass",
+        "issues": "The answer is thorough and faithful but slightly verbose — it largely restates the source chunk paragraph by paragraph without much synthesis or trimming."
+      },
+      "genTokens": {
+        "in": 3377,
+        "out": 541
+      },
+      "judgeTokens": {
+        "in": 2432,
+        "out": 64
+      }
+    },
+    {
+      "query": "Anthropic SWE interview questions",
+      "answer": "Based on your bookmarks, here's what was noted about the Anthropic SWE interview loop:\n\nA Reddit post and YouTube breakdown of the Anthropic SWE interview process highlighted that candidates are expected to casually handle problems like:\n- Implementing an **LRU cache with concurrency**\n- Building a **web crawler**\n- Designing **LLM inference infrastructure and KV cache management**\n- Reconstructing **profiler traces from a sampling profiler**\n\nThat's the extent of the detail available in your bookmarks on this topic.",
+      "scores": {
+        "faithfulness": 10,
+        "completeness": 10,
+        "conciseness": 9,
+        "overall": "pass",
+        "issues": ""
+      },
+      "genTokens": {
+        "in": 3218,
+        "out": 145
+      },
+      "judgeTokens": {
+        "in": 2034,
+        "out": 36
+      }
+    }
+  ]
+}
