@@ -7,9 +7,11 @@
     "db:migrate": "tsx src/cli-migrate.ts",
     "index": "tsx src/cli-index.ts",
     "search": "tsx src/cli-search.ts",
-    "eval": "tsx src/cli-eval.ts"
+    "eval": "tsx src/cli-eval.ts",
+    "ask": "tsx src/cli-ask.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.100.0",
     "chalk": "^5.6.2",
     "dotenv": "^16.4.7",
     "openai": "^4.77.0",
