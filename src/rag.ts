@@ -8,21 +8,8 @@ export type Strategy = "vector" | "keyword" | "hybrid";
 
 export interface RagResult {
   question: string;
-  answer: string;
   hits: SearchHit[];
   generation: GenerationResult | null;
-}
-
-function formatChunks(hits: SearchHit[]): string {
-  return hits
-    .map((h) => {
-      const lines = [`[bookmark_id:${h.bookmarkId}]`, `Author: @${h.author}`];
-      if (h.tags.length > 0) lines.push(`Tags: ${h.tags.join(", ")}`);
-      if (h.notes) lines.push(`Notes: ${h.notes}`);
-      lines.push(`Tweet: ${h.text}`);
-      return lines.join("\n");
-    })
-    .join("\n\n---\n\n");
 }
 
 function pickSearch(strategy: Strategy) {
@@ -43,21 +30,10 @@ export async function ask(
   const hits = await search(question, k);
 
   if (hits.length === 0) {
-    return {
-      question,
-      answer: "No bookmarks matched this question.",
-      hits: [],
-      generation: null,
-    };
+    return { question, hits: [], generation: null };
   }
 
-  const chunks = formatChunks(hits);
-  const generation = await generate(question, chunks, model);
+  const generation = await generate(question, hits, model);
 
-  return {
-    question,
-    answer: generation.text,
-    hits,
-    generation,
-  };
+  return { question, hits, generation };
 }
