@@ -4,6 +4,8 @@ import ora from "ora";
 import { ask, type Strategy } from "./rag.js";
 import { closePool } from "./db.js";
 import type { Citation } from "./generate-native-citations.js";
+import { parseArgs, hasAnyFilter } from "./cli-args.js";
+import { formatFiltersForDisplay } from "./search/filters.js";
 
 // Per million tokens.
 const PRICING: Record<string, { input: number; output: number }> = {
@@ -20,20 +22,25 @@ function priceFor(modelId: string) {
 }
 
 async function main() {
-  const question = process.argv.slice(2).join(" ").trim();
+  const { query: question, filters } = parseArgs(process.argv.slice(2));
   if (!question) {
-    console.error(chalk.red('Usage: npm run ask -- "your question"'));
+    console.error(
+      chalk.red(
+        'Usage: npm run ask -- "your question" [--author handle] [--tag t] [--since YYYY-MM-DD] [--until YYYY-MM-DD]'
+      )
+    );
     process.exit(1);
   }
 
   const strategy = (process.env.SEARCH_STRATEGY ?? "vector") as Strategy;
   const k = Number(process.env.ASK_K ?? 5);
   const model = process.env.GEN_MODEL;
+  const filtersOrUndef = hasAnyFilter(filters) ? filters : undefined;
 
   const spinner = ora(
-    `Retrieving top ${k} (strategy=${strategy}), asking Claude`
+    `Retrieving top ${k} (strategy=${strategy})${formatFiltersForDisplay(filtersOrUndef)}, asking Claude`
   ).start();
-  const result = await ask(question, k, strategy, model);
+  const result = await ask(question, k, strategy, model, filtersOrUndef);
   spinner.succeed("Done");
 
   console.log(chalk.bold(`\nQuestion: ${question}\n`));

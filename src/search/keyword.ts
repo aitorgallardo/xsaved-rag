@@ -1,5 +1,6 @@
 import { getPool } from "../db.js";
-import type { SearchHit } from "../types.js";
+import type { SearchHit, SearchFilters } from "../types.js";
+import { buildFilterClause } from "./filters.js";
 
 function toOrTsquery(input: string): string {
   return input
@@ -12,10 +13,14 @@ function toOrTsquery(input: string): string {
 
 export async function keywordSearch(
   query: string,
-  k: number
+  k: number,
+  filters?: SearchFilters
 ): Promise<SearchHit[]> {
   const tsquery = toOrTsquery(query);
   if (!tsquery) return [];
+
+  // $1 = tsquery, $2 = k, filters start at $3
+  const filter = buildFilterClause(filters, 3);
 
   const sql = `
     SELECT
@@ -26,11 +31,11 @@ export async function keywordSearch(
       b.tags,
       ts_rank_cd(b.text_search, q) AS score
     FROM bookmarks b, to_tsquery('english', $1) q
-    WHERE b.text_search @@ q
+    WHERE b.text_search @@ q${filter.sql}
     ORDER BY score DESC
     LIMIT $2;
   `;
-  const { rows } = await getPool().query(sql, [tsquery, k]);
+  const { rows } = await getPool().query(sql, [tsquery, k, ...filter.params]);
 
   return rows.map((r, i) => ({
     bookmarkId: r.id as string,

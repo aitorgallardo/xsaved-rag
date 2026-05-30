@@ -5,28 +5,39 @@ import { keywordSearch } from "./search/keyword.js";
 import { hybridSearch } from "./search/hybrid.js";
 import { closePool } from "./db.js";
 import type { SearchHit } from "./types.js";
+import { parseArgs, hasAnyFilter } from "./cli-args.js";
+import { formatFiltersForDisplay } from "./search/filters.js";
 
 type Strategy = "vector" | "keyword" | "hybrid";
 
 async function main() {
-  const query = process.argv.slice(2).join(" ").trim();
+  const { query, filters } = parseArgs(process.argv.slice(2));
   if (!query) {
-    console.error(chalk.red('Usage: npm run search -- "your question"'));
+    console.error(
+      chalk.red(
+        'Usage: npm run search -- "your question" [--author handle] [--tag t] [--since YYYY-MM-DD] [--until YYYY-MM-DD]'
+      )
+    );
     process.exit(1);
   }
 
   const strategy = (process.env.SEARCH_STRATEGY ?? "vector") as Strategy;
   const k = Number(process.env.SEARCH_K ?? 5);
+  const filtersOrUndef = hasAnyFilter(filters) ? filters : undefined;
 
   const hits: SearchHit[] =
     strategy === "keyword"
-      ? await keywordSearch(query, k)
+      ? await keywordSearch(query, k, filtersOrUndef)
       : strategy === "hybrid"
-        ? await hybridSearch(query, k)
-        : await vectorSearch(query, k);
+        ? await hybridSearch(query, k, filtersOrUndef)
+        : await vectorSearch(query, k, filtersOrUndef);
 
   console.log(chalk.bold(`\nQuery: ${query}`));
-  console.log(chalk.dim(`Strategy: ${strategy}   Top ${hits.length}\n`));
+  console.log(
+    chalk.dim(
+      `Strategy: ${strategy}   Top ${hits.length}${formatFiltersForDisplay(filtersOrUndef)}\n`
+    )
+  );
 
   if (hits.length === 0) {
     console.log(chalk.yellow("No matches."));

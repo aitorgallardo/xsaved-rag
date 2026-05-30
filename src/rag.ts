@@ -2,7 +2,7 @@ import { vectorSearch } from "./search/vector.js";
 import { keywordSearch } from "./search/keyword.js";
 import { hybridSearch } from "./search/hybrid.js";
 import { generate, type GenerationResult } from "./generate-native-citations.js";
-import type { SearchHit } from "./types.js";
+import type { SearchHit, SearchFilters } from "./types.js";
 
 export type Strategy = "vector" | "keyword" | "hybrid";
 
@@ -24,10 +24,11 @@ export async function ask(
   question: string,
   k: number,
   strategy: Strategy,
-  model?: string
+  model?: string,
+  filters?: SearchFilters
 ): Promise<RagResult> {
   const search = pickSearch(strategy);
-  const hits = await search(question, k);
+  const hits = await search(question, k, filters);
 
   if (hits.length === 0) {
     return { question, hits: [], generation: null };

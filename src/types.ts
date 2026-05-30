@@ -18,3 +18,10 @@ export interface SearchHit {
   distance?: number;
   keywordScore?: number;
 }
+
+export interface SearchFilters {
+  author?: string;
+  tags?: string[];
+  bookmarkedAfter?: string;
+  bookmarkedBefore?: string;
+}

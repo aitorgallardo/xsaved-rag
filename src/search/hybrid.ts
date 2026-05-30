@@ -1,6 +1,6 @@
 import { vectorSearch } from "./vector.js";
 import { keywordSearch } from "./keyword.js";
-import type { SearchHit } from "../types.js";
+import type { SearchHit, SearchFilters } from "../types.js";
 
 const RRF_K = 60;
 const PER_LEG_K = 20;
@@ -9,11 +9,12 @@ const KEYWORD_WEIGHT = Number(process.env.HYBRID_KEYWORD_WEIGHT ?? 1);
 
 export async function hybridSearch(
   query: string,
-  k: number
+  k: number,
+  filters?: SearchFilters
 ): Promise<SearchHit[]> {
   const [vectorHits, keywordHits] = await Promise.all([
-    vectorSearch(query, PER_LEG_K),
-    keywordSearch(query, PER_LEG_K),
+    vectorSearch(query, PER_LEG_K, filters),
+    keywordSearch(query, PER_LEG_K, filters),
   ]);
 
   const fused = new Map<string, { hit: SearchHit; score: number }>();
