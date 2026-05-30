@@ -5,8 +5,7 @@ import { loadBookmarks } from "./load-bookmarks.js";
 import { indexBookmarks } from "./index-bookmarks.js";
 import { closePool } from "./db.js";
 
-const DEFAULT_PATH =
-  "../../xsaved-landing-page/public/demo/main-demo/data/bookmarks.json";
+const DEFAULT_PATH = "./data/bookmarks.json";
 
 async function main() {
   const path = process.env.BOOKMARKS_PATH ?? DEFAULT_PATH;

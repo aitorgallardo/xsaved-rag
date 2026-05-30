@@ -147,7 +147,7 @@ npm install
 npm run db:migrate     # create schema + HNSW + GIN indexes
 
 # 3. Index the bookmarks
-npm run index          # defaults to 100 demo bookmarks
+npm run index          # reads ./data/bookmarks.json, indexes first 100 (INDEX_LIMIT)
 
 # 4. Search (any strategy)
 npm run search -- "tips on writing prompts for Claude"

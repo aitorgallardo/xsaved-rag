@@ -4,5 +4,7 @@ dist/
 output/
 education/
 data/*.json
+# ...but keep the bundled demo corpus tracked so the project is self-contained.
+!data/bookmarks.json
 PLAN.md
 LEARNING.md
