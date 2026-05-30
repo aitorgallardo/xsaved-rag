@@ -1,11 +1,11 @@
 /**
  * Portable generation module using INLINE [bookmark_id:X] citation tags.
  *
- * Use this instead of `src/generate.ts` (which uses Anthropic's native
- * citations API) when you need to swap to a non-Anthropic model — OpenAI,
- * Mistral, Gemini, open-source LLMs via a proxy, etc. The native citations
- * API is Anthropic-specific; the inline-tag pattern works with any LLM
- * that has a messages API.
+ * Use this instead of `src/generate-native-citations.ts` (which uses
+ * Anthropic's native citations API) when you need to swap to a non-Anthropic
+ * model — OpenAI, Mistral, Gemini, open-source LLMs via a proxy, etc. The
+ * native citations API is Anthropic-specific; the inline-tag pattern works
+ * with any LLM that has a messages API.
  *
  * Trade-off vs the native version:
  *   ✓ Lower input tokens (no document wrapper overhead — ~2x cheaper input)
@@ -16,9 +16,9 @@
  *
  * HOW TO SWAP THIS INTO THE PIPELINE:
  *   1. In `src/rag.ts`, change the import line from:
- *        import { generate, type GenerationResult } from "./generate.js";
+ *        import { generate, type GenerationResult } from "./generate-native-citations.js";
  *      to:
- *        import { generate, type GenerationResult } from "./generate-inline.js";
+ *        import { generate, type GenerationResult } from "./generate-inline-citations.js";
  *      and pass `formatChunks(hits)` instead of `hits` to generate().
  *   2. Update `src/cli-ask.ts` to render `result.generation.text` directly
  *      instead of walking segments + citations.

@@ -3,7 +3,7 @@ import chalk from "chalk";
 import ora from "ora";
 import { ask, type Strategy } from "./rag.js";
 import { closePool } from "./db.js";
-import type { Citation } from "./generate.js";
+import type { Citation } from "./generate-native-citations.js";
 
 // Per million tokens.
 const PRICING: Record<string, { input: number; output: number }> = {

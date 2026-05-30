@@ -1,7 +1,7 @@
 import { vectorSearch } from "./search/vector.js";
 import { keywordSearch } from "./search/keyword.js";
 import { hybridSearch } from "./search/hybrid.js";
-import { generate, type GenerationResult } from "./generate.js";
+import { generate, type GenerationResult } from "./generate-native-citations.js";
 import type { SearchHit } from "./types.js";
 
 export type Strategy = "vector" | "keyword" | "hybrid";
