@@ -9,12 +9,15 @@
     "search": "tsx src/cli-search.ts",
     "eval": "tsx src/cli-eval.ts",
     "eval:gen": "tsx src/cli-eval-gen.ts",
-    "ask": "tsx src/cli-ask.ts"
+    "ask": "tsx src/cli-ask.ts",
+    "serve": "tsx src/server.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.100.0",
+    "@hono/node-server": "^2.0.4",
     "chalk": "^5.6.2",
     "dotenv": "^16.4.7",
+    "hono": "^4.12.23",
     "openai": "^4.77.0",
     "ora": "^9.3.0",
     "pg": "^8.13.1",
