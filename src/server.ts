@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
+import chalk from "chalk";
 import { getPool } from "./db.js";
 import { keywordSearch } from "./search/keyword.js";
 import { vectorSearch } from "./search/vector.js";
@@ -15,7 +16,35 @@ import type { SearchHit } from "./types.js";
 // exactly ONE place. This is the "thin bridge" architecture: rag = engine,
 // mcp = doorway.
 
-const app = new Hono();
+// `Variables` lets a handler stash a one-line summary the logger picks up.
+const app = new Hono<{ Variables: { detail?: string } }>();
+
+// Request logger — prints one coloured line per call so you can watch the
+// traffic Claude (via the MCP server) sends. Skips /health to avoid noise.
+app.use("*", async (c, next) => {
+  const start = Date.now();
+  await next();
+  if (c.req.path === "/health") return;
+  const ms = Date.now() - start;
+  const status = c.res.status;
+  const statusColor = status < 400 ? chalk.green : chalk.red;
+  const queryString = c.req.url.includes("?")
+    ? chalk.dim("?" + c.req.url.split("?")[1])
+    : "";
+  const detail = c.get("detail");
+  console.log(
+    [
+      chalk.gray(new Date().toLocaleTimeString()),
+      chalk.cyan(c.req.method.padEnd(4)),
+      c.req.path + queryString,
+      statusColor(String(status)),
+      chalk.dim(`${ms}ms`),
+      detail ? chalk.yellow(`→ ${detail}`) : "",
+    ]
+      .filter(Boolean)
+      .join(" ")
+  );
+});
 
 const strategies = {
   keyword: keywordSearch,
@@ -42,6 +71,7 @@ app.get("/search", async (c) => {
 
   const limit = Math.min(Math.max(Number(c.req.query("limit") ?? 10), 1), 50);
   const hits: SearchHit[] = await search(q, limit);
+  c.set("detail", `${hits.length} hits [${strategy}] "${q}"`);
   return c.json({ query: q, strategy, count: hits.length, hits });
 });
 
@@ -95,4 +125,10 @@ app.get("/tags", async (c) => {
 
 const port = Number(process.env.PORT ?? 8787);
 serve({ fetch: app.fetch, port });
-console.error(`[xsaved-rag] search API listening on http://localhost:${port}`);
+console.log(chalk.bold.green(`\n  xsaved-rag search API`));
+console.log(chalk.dim(`  listening on `) + chalk.cyan(`http://localhost:${port}`));
+console.log(
+  chalk.dim(`  routes: `) +
+    `/search?q&strategy&limit  /bookmarks/:id  /stats  /tags  /health`
+);
+console.log(chalk.dim(`  watching for requests…\n`));
