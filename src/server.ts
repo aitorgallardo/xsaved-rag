@@ -6,7 +6,7 @@ import { getPool } from "./db.js";
 import { keywordSearch } from "./search/keyword.js";
 import { vectorSearch } from "./search/vector.js";
 import { hybridSearch } from "./search/hybrid.js";
-import type { SearchHit } from "./types.js";
+import type { SearchHit, SearchFilters } from "./types.js";
 
 // --- HTTP API in front of the RAG retrieval engine -------------------------
 //
@@ -70,9 +70,40 @@ app.get("/search", async (c) => {
   }
 
   const limit = Math.min(Math.max(Number(c.req.query("limit") ?? 10), 1), 50);
-  const hits: SearchHit[] = await search(q, limit);
-  c.set("detail", `${hits.length} hits [${strategy}] "${q}"`);
-  return c.json({ query: q, strategy, count: hits.length, hits });
+
+  // Optional metadata pre-filters: applied in the SQL WHERE clause *before*
+  // scoring, so you can combine "structured" filtering with semantic/keyword
+  // search (e.g. only @author, only a tag, only a date range).
+  const author = c.req.query("author");
+  const tag = c.req.query("tag");
+  const since = c.req.query("since"); // ISO date, inclusive lower bound
+  const until = c.req.query("until"); // ISO date, inclusive upper bound
+  const filters: SearchFilters = {};
+  if (author) filters.author = author;
+  if (tag) filters.tags = [tag];
+  if (since) filters.bookmarkedAfter = since;
+  if (until) filters.bookmarkedBefore = until;
+  const hasFilters = Object.keys(filters).length > 0;
+
+  const hits: SearchHit[] = await search(q, limit, hasFilters ? filters : undefined);
+  const filterNote = hasFilters
+    ? ` {${[
+        author && `author=${author}`,
+        tag && `tag=${tag}`,
+        since && `since=${since}`,
+        until && `until=${until}`,
+      ]
+        .filter(Boolean)
+        .join(", ")}}`
+    : "";
+  c.set("detail", `${hits.length} hits [${strategy}] "${q}"${filterNote}`);
+  return c.json({
+    query: q,
+    strategy,
+    filters: hasFilters ? filters : undefined,
+    count: hits.length,
+    hits,
+  });
 });
 
 // GET /bookmarks/:id — a single bookmark by tweet id
