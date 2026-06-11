@@ -34,10 +34,21 @@ async function main() {
   const outDir = resolve(process.env.MEDIA_ASSETS_DIR ?? "./data/media");
   const concurrency = Number(process.env.DOWNLOAD_CONCURRENCY ?? 12);
 
-  const manifest = JSON.parse(await readFile(manifestPath, "utf-8")) as {
-    media?: Record<string, string>;
-  };
-  const media = manifest.media ?? {};
+  let media: Record<string, string> = {};
+  try {
+    const manifest = JSON.parse(await readFile(manifestPath, "utf-8")) as {
+      media?: Record<string, string>;
+    };
+    media = manifest.media ?? {};
+  } catch {
+    console.log(
+      chalk.yellow(
+        `No asset manifest at ${manifestPath} — skipping media download.\n` +
+          `Image/video bookmarks will fall back to metadata stubs (still indexable).`
+      )
+    );
+    return;
+  }
 
   const bookmarks = await loadBookmarks(bookmarksPath, limit);
 
@@ -113,9 +124,10 @@ async function main() {
     );
   }
   console.log(
-    chalk.cyan(
-      `Now run:  MEDIA_ASSETS_DIR=${outDir} ENRICH_FORCE=true npm run index`
-    )
+    chalk.cyan(`Images ready in ${outDir} — captions run on the next  npm run index`)
+  );
+  console.log(
+    chalk.dim(`(already-indexed? re-caption with  ENRICH_FORCE=true npm run index)`)
   );
 }
 

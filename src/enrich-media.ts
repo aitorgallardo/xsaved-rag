@@ -23,9 +23,10 @@ export const VISION_MODEL = "gpt-5.4-nano";
 // Vision can be turned off entirely (metadata-only) with ENRICH_VISION=false.
 const VISION_ENABLED = process.env.ENRICH_VISION !== "false";
 
-// Where local media files live. The demo's media `urls` are web-style paths
-// (".../assets/media/<id>_0_0.webp"); set this to the directory that holds them.
-const ASSETS_DIR = process.env.MEDIA_ASSETS_DIR;
+// Where local media files live. `npm run download:media` populates ./data/media,
+// so we default there — no env var needed for the normal workflow. Override with
+// MEDIA_ASSETS_DIR. http(s) media URLs (production) are fetched regardless.
+const ASSETS_DIR = process.env.MEDIA_ASSETS_DIR ?? "./data/media";
 
 const CAPTION_PROMPT =
   "You are indexing a social-media bookmark for search. Describe this image in " +

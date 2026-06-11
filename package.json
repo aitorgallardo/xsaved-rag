@@ -7,6 +7,7 @@
     "db:migrate": "tsx src/cli-migrate.ts",
     "download:media": "tsx src/cli-download-media.ts",
     "index": "tsx src/cli-index.ts",
+    "setup": "npm run db:migrate && npm run download:media && npm run index",
     "search": "tsx src/cli-search.ts",
     "eval": "tsx src/cli-eval.ts",
     "eval:media": "tsx src/cli-eval-media.ts",
