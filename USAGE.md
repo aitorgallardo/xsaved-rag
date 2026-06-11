@@ -1,93 +1,81 @@
-# How to run, test & watch the MCP + RAG system
+# How to run the RAG engine — the source of truth for setup
 
-The mental model: **rag = the engine** (data + search), **mcp = the doorway**
-Claude talks to. The doorway calls the engine over HTTP.
+**rag = the engine** (data + search). `xsaved-mcp` and `xsaved-research-agent`
+both sit on top of it. Start the engine here; this is the one place the startup
+steps live — the sibling projects link back to this file.
 
 ```
-Claude Desktop / Inspector → xsaved-mcp (thin bridge) → HTTP → xsaved-rag service → Postgres (pgvector + FTS)
+xsaved-mcp / xsaved-research-agent  →  HTTP  →  xsaved-rag engine  →  Postgres (pgvector + FTS)
 ```
 
 **Prereq:** OrbStack (Docker) running.
 
-## Terminal 1 — start the RAG engine (data + search)
+## Start the engine
 
 ```bash
 # 0. start OrbStack (your local Docker runtime), if it isn't already running
 open -a OrbStack              # macOS — give it a few seconds to boot
 docker ps                     # sanity check — errors if the daemon isn't ready yet
 
-# 1. launch the local database + search service
+# 1. launch the local database
 cd xsaved-rag
-docker compose up -d --wait   # starts the Postgres + pgvector container (xsaved-rag-db on :5432)
-# one-time setup — tables, media, embeddings (idempotent; safe to re-run)
+docker compose up -d --wait   # Postgres + pgvector container (xsaved-rag-db on :5432)
+
+# 2. one-time setup — tables, media, embeddings (idempotent; safe to re-run)
 npm run setup                 # = db:migrate + download:media + index
                               #   · downloads ~165 tweet images via the asset manifest
                               #   · captions images/videos with gpt-5.4-nano (OCR) — ~$0.07 one-time
                               #   · embeds tweet text + captions (~$0.0002)
                               #   skip the paid captions: ENRICH_VISION=false npm run setup
-npm run serve                 # API on http://localhost:8790 — LEAVE THIS RUNNING
+
+# 3. start the search API (leave this running)
+npm run serve                 # http://localhost:8790 — LEAVE THIS RUNNING
 ```
 
-Sanity-check rag on its own (optional):
+## Try it — including the media search
 
 ```bash
+# plain hybrid search
 curl "http://localhost:8790/search?q=motivation&strategy=hybrid&limit=3"
-# with metadata filters (combine structured + semantic search):
+
+# metadata filters (structured + semantic in one query)
 curl "http://localhost:8790/search?q=rockets&strategy=hybrid&author=elonmusk"
-curl "http://localhost:8790/search?q=ai&strategy=vector&tag=ai_local&since=2026-01-01"
+
+# MEDIA search — matched by an image/video caption, not the tweet text:
+curl "http://localhost:8790/search?q=green+circuit+board+animation&strategy=vector&limit=3"
+#   → top hit is @AdamKPx, whose tweet ("I'm mad I didn't think of this first")
+#     never mentions circuits — it matched via the video's caption (OCR + vision).
 ```
 
-## Terminal 2 — test the MCP server (pick one)
-
-**Option A — fastest, no Claude needed (MCP Inspector UI):**
+You can also search straight from the CLI without the HTTP server:
 
 ```bash
-cd xsaved-mcp
-npm run inspect               # opens a browser UI
-# click a tool (e.g. hybrid_search_bookmarks), type a query, hit Run
+npm run search -- "green circuit board animation"
 ```
 
-**Option B — the real demo (Claude Desktop):**
+**Measure what media adds** (rebuilds the vector index text-only vs +media and
+reports recall on media-dependent queries):
 
 ```bash
-cd xsaved-mcp
-npm run build
-# Claude Desktop config already points at RAG_API_URL=http://localhost:8790
-# Fully QUIT and reopen Claude Desktop, then ask:
-#   "hybrid-search my bookmarks for discipline"
-# or use the "research_bookmarks" prompt from the + / prompt picker.
+npm run eval:media            # Recall@5 0.333 → 1.000, MRR 0.284 → 1.000
 ```
 
-## Terminal 3 — watch what's happening (logs)
-
-Both servers log every request, so you can see the traffic flow.
-
-**rag** (Terminal 1) prints one coloured line per call:
+The serve terminal logs one coloured line per call:
 
 ```
 8:16:58 AM GET /search?...&strategy=hybrid 200 660ms → 2 hits [hybrid] "discipline"
 ```
 
-**mcp** is spawned by Claude Desktop and has no terminal — watch its log file:
+## Drive the engine from the other projects
 
-```bash
-tail -f ~/Library/Logs/Claude/mcp-server-xsaved.log
-```
+Once `npm run serve` is up, point either consumer at it:
 
-You'll see each tool call:
+- **MCP server** (Claude Desktop / MCP Inspector) → `xsaved-mcp/USAGE.md`
+- **Research agent** (ask a question → cited report) → `xsaved-research-agent/USAGE.md`
 
-```
-[xsaved-mcp] 8:16:57 AM → hybrid_search_bookmarks("discipline", limit=2)
-[xsaved-mcp] 8:16:58 AM   ✓ hybrid_search_bookmarks("discipline", limit=2) (749ms)
-```
-
-(If you run mcp via `npm run inspect` instead, the Inspector shows these.)
-So: **rag terminal + `tail -f` the MCP log = full visibility of every hop.**
-
-## If it breaks
+## If the engine breaks
 
 - `docker compose` says **"cannot connect to the Docker daemon"** → OrbStack isn't running yet (`open -a OrbStack`, wait a few seconds, retry).
-- Tool says **"could not reach xsaved-rag service"** → Terminal 1 isn't running (`npm run serve`).
-- `/search` empty or errors → DB not indexed (`npm run index`).
+- `/search` empty or errors → not set up yet (`npm run setup`).
+- **captions missing / "(no preview available)"** → images weren't downloaded. Run `npm run download:media`, then `ENRICH_FORCE=true npm run index`. (Or `ENRICH_VISION=false` to skip captions on purpose.)
 - `EADDRINUSE: :::8790` → a server is already on that port; `lsof -ti tcp:8790 | xargs kill`.
-- Claude Desktop shows no `xsaved` tools → didn't fully quit/reopen, or `dist` not built (`npm run build`).
