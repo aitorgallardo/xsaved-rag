@@ -14,14 +14,29 @@ CREATE TABLE IF NOT EXISTS bookmarks (
   synced_at     TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- V2 (media enrichment): the raw media array + the text we extract from it.
+--   media               raw media items, kept so enrichment can re-run without the source file
+--   media_summary       human-readable text distilled from the media (captions, quoted tweets, card titles)
+--   media_summary_model which vision model produced it (NULL when no vision call was needed)
+--   media_enriched_at   when enrichment last ran (the cache key + the re-embed trigger)
+ALTER TABLE bookmarks ADD COLUMN IF NOT EXISTS media               JSONB NOT NULL DEFAULT '[]'::jsonb;
+ALTER TABLE bookmarks ADD COLUMN IF NOT EXISTS media_summary       TEXT;
+ALTER TABLE bookmarks ADD COLUMN IF NOT EXISTS media_summary_model TEXT;
+ALTER TABLE bookmarks ADD COLUMN IF NOT EXISTS media_enriched_at   TIMESTAMPTZ;
+
+-- Recreate the full-text vector so it also indexes media_summary. A generated
+-- column's expression can't be altered in place, so we drop + re-add. Dropping
+-- the column also drops its GIN index, which the CREATE INDEX below restores.
+ALTER TABLE bookmarks DROP COLUMN IF EXISTS text_search;
 ALTER TABLE bookmarks
-  ADD COLUMN IF NOT EXISTS text_search tsvector
+  ADD COLUMN text_search tsvector
   GENERATED ALWAYS AS (
     to_tsvector('english',
       author || ' ' ||
       coalesce(text, '') || ' ' ||
       coalesce(notes, '') || ' ' ||
-      coalesce(tags::text, '')
+      coalesce(tags::text, '') || ' ' ||
+      coalesce(media_summary, '')
     )
   ) STORED;
 

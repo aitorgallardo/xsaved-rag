@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "db:migrate": "tsx src/cli-migrate.ts",
+    "download:media": "tsx src/cli-download-media.ts",
     "index": "tsx src/cli-index.ts",
     "search": "tsx src/cli-search.ts",
     "eval": "tsx src/cli-eval.ts",

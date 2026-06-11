@@ -6,5 +6,7 @@ education/
 data/*.json
 # ...but keep the bundled demo corpus tracked so the project is self-contained.
 !data/bookmarks.json
+# Downloaded media (twimg images fetched via the asset manifest) — not committed.
+data/media/
 PLAN.md
 LEARNING.md

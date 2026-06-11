@@ -5,7 +5,8 @@ export const EMBEDDING_DIM = 1536;
 
 let client: OpenAI | null = null;
 
-function getClient(): OpenAI {
+/** Shared OpenAI client — used by both the embeddings call and media captioning. */
+export function getOpenAI(): OpenAI {
   if (client) return client;
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
@@ -18,7 +19,7 @@ function getClient(): OpenAI {
 export async function embedTexts(inputs: string[]): Promise<number[][]> {
   if (inputs.length === 0) return [];
 
-  const response = await getClient().embeddings.create({
+  const response = await getOpenAI().embeddings.create({
     model: EMBEDDING_MODEL,
     input: inputs,
   });

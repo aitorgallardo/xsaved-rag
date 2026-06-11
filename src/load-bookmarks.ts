@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import type { BookmarkLite } from "./types.js";
+import type { BookmarkLite, MediaItem } from "./types.js";
 
 export async function loadBookmarks(
   path: string,
@@ -18,6 +18,7 @@ export async function loadBookmarks(
     tags: Array.isArray(b.tags) ? b.tags : [],
     createdAt: b.created_at,
     bookmarkedAt: b.bookmarked_at,
+    media: Array.isArray(b.media) ? b.media : [],
   }));
 }
 
@@ -27,6 +28,7 @@ export function buildChunkText(b: BookmarkLite): string {
     b.tags.length > 0 ? `Tags: ${b.tags.join(", ")}` : null,
     b.notes ? `Notes: ${b.notes}` : null,
     `Tweet: ${b.text}`,
+    b.mediaSummary ? `Media: ${b.mediaSummary}` : null,
   ]
     .filter(Boolean)
     .join("\n");
@@ -40,4 +42,5 @@ interface RawBookmark {
   tags?: string[];
   created_at: string;
   bookmarked_at: string;
+  media?: MediaItem[];
 }

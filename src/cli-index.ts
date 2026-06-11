@@ -15,13 +15,33 @@ async function main() {
   const bookmarks = await loadBookmarks(path, limit);
   loader.succeed(chalk.green(`Loaded ${bookmarks.length} bookmarks`));
 
-  const indexer = ora("Indexing").start();
-  const result = await indexBookmarks(bookmarks, (done, total) => {
-    indexer.text = `Indexing ${done}/${total}`;
+  const enricher = ora("Enriching media").start();
+  const embedder = ora("Indexing");
+  const result = await indexBookmarks(bookmarks, {
+    onEnrich: (done, total) => {
+      enricher.text =
+        total === 0 ? "Enriching media (nothing to do)" : `Enriching media ${done}/${total}`;
+    },
+    onEmbed: (done, total) => {
+      if (!embedder.isSpinning) {
+        enricher.succeed(chalk.green("Media enrichment done"));
+        embedder.start();
+      }
+      embedder.text = `Indexing ${done}/${total}`;
+    },
   });
-  indexer.succeed(
+
+  if (enricher.isSpinning) enricher.succeed(chalk.green("Media enrichment done"));
+  if (embedder.isSpinning) embedder.stop();
+
+  console.log(
     chalk.green(
-      `Indexed: embedded ${result.embedded}, skipped ${result.skipped} (already had embeddings), total ${result.total}`
+      `Enriched: ${result.enriched} of ${result.withMedia} bookmarks with media`
+    )
+  );
+  console.log(
+    chalk.green(
+      `Indexed: embedded ${result.embedded}, skipped ${result.skipped} (already current), total ${result.total}`
     )
   );
 

@@ -1,3 +1,10 @@
+export interface MediaItem {
+  /** image | video | repost | article | card | link */
+  type: string;
+  urls: string[];
+  metadata?: Record<string, any>;
+}
+
 export interface BookmarkLite {
   id: string;
   text: string;
@@ -6,6 +13,11 @@ export interface BookmarkLite {
   tags: string[];
   createdAt: string;
   bookmarkedAt: string;
+  media: MediaItem[];
+  /** Text distilled from media by the enrichment pass (captions, quoted tweets, card titles). */
+  mediaSummary?: string;
+  /** Which vision model produced the caption(s), if any. */
+  mediaSummaryModel?: string;
 }
 
 export interface SearchHit {
