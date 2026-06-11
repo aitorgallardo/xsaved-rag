@@ -1,0 +1,103 @@
+{
+  "strategy": "vector",
+  "textOnly": {
+    "label": "text-only",
+    "perQuery": [
+      {
+        "query": "a space nebula galaxy logo for an AI company",
+        "recallAt5": 1,
+        "recallAt10": 1,
+        "reciprocalRank": 0.5,
+        "firstRank": 2
+      },
+      {
+        "query": "Dylan Field the CEO of Figma in an interview",
+        "recallAt5": 0,
+        "recallAt10": 0,
+        "reciprocalRank": 0,
+        "firstRank": null
+      },
+      {
+        "query": "a glowing green circuit board electronic module",
+        "recallAt5": 0,
+        "recallAt10": 0,
+        "reciprocalRank": 0,
+        "firstRank": null
+      },
+      {
+        "query": "Apple AAPL shareholders quarterly stats page screenshot",
+        "recallAt5": 0,
+        "recallAt10": 0,
+        "reciprocalRank": 0.0625,
+        "firstRank": 16
+      },
+      {
+        "query": "warriors in armor holding medieval weapons and a white flag",
+        "recallAt5": 0,
+        "recallAt10": 1,
+        "reciprocalRank": 0.14285714285714285,
+        "firstRank": 7
+      },
+      {
+        "query": "satellite map showing flight paths over the Middle East",
+        "recallAt5": 1,
+        "recallAt10": 1,
+        "reciprocalRank": 1,
+        "firstRank": 1
+      }
+    ],
+    "meanRecallAt5": 0.3333333333333333,
+    "meanRecallAt10": 0.5,
+    "mrr": 0.28422619047619047
+  },
+  "withMedia": {
+    "label": "+media",
+    "perQuery": [
+      {
+        "query": "a space nebula galaxy logo for an AI company",
+        "recallAt5": 1,
+        "recallAt10": 1,
+        "reciprocalRank": 1,
+        "firstRank": 1
+      },
+      {
+        "query": "Dylan Field the CEO of Figma in an interview",
+        "recallAt5": 1,
+        "recallAt10": 1,
+        "reciprocalRank": 1,
+        "firstRank": 1
+      },
+      {
+        "query": "a glowing green circuit board electronic module",
+        "recallAt5": 1,
+        "recallAt10": 1,
+        "reciprocalRank": 1,
+        "firstRank": 1
+      },
+      {
+        "query": "Apple AAPL shareholders quarterly stats page screenshot",
+        "recallAt5": 1,
+        "recallAt10": 1,
+        "reciprocalRank": 1,
+        "firstRank": 1
+      },
+      {
+        "query": "warriors in armor holding medieval weapons and a white flag",
+        "recallAt5": 1,
+        "recallAt10": 1,
+        "reciprocalRank": 1,
+        "firstRank": 1
+      },
+      {
+        "query": "satellite map showing flight paths over the Middle East",
+        "recallAt5": 1,
+        "recallAt10": 1,
+        "reciprocalRank": 1,
+        "firstRank": 1
+      }
+    ],
+    "meanRecallAt5": 1,
+    "meanRecallAt10": 1,
+    "mrr": 1
+  }
+}

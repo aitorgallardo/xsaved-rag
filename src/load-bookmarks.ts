@@ -23,12 +23,15 @@ export async function loadBookmarks(
 }
 
 export function buildChunkText(b: BookmarkLite): string {
+  // EMBED_MEDIA=false builds a text-only chunk (used by the eval A/B to measure
+  // the lift media enrichment adds). Default: include the media summary.
+  const includeMedia = process.env.EMBED_MEDIA !== "false";
   return [
     `Author: @${b.author}`,
     b.tags.length > 0 ? `Tags: ${b.tags.join(", ")}` : null,
     b.notes ? `Notes: ${b.notes}` : null,
     `Tweet: ${b.text}`,
-    b.mediaSummary ? `Media: ${b.mediaSummary}` : null,
+    includeMedia && b.mediaSummary ? `Media: ${b.mediaSummary}` : null,
   ]
     .filter(Boolean)
     .join("\n");
