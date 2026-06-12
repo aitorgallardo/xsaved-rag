@@ -26,7 +26,8 @@ npm run setup                 # = db:migrate + download:media + index
                               #   · downloads ~165 tweet images via the asset manifest
                               #   · captions images/videos with gpt-5.4-nano (OCR) — ~$0.07 one-time
                               #   · embeds tweet text + captions (~$0.0002)
-                              #   skip the paid captions: ENRICH_VISION=false npm run setup
+                              # captions are ON by default. to skip the paid step (metadata-only, free):
+                              #   ENRICH_VISION=false npm run setup    (or: npm run db:migrate && ENRICH_VISION=false npm run index)
 
 # 3. start the search API (leave this running)
 npm run serve                 # http://localhost:8790 — LEAVE THIS RUNNING
