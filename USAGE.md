@@ -48,6 +48,34 @@ curl "http://localhost:8790/search?q=green+circuit+board+animation&strategy=vect
 #     never mentions circuits — it matched via the video's caption (OCR + vision).
 ```
 
+## Explore the data directly (optional)
+
+Want to poke the corpus yourself instead of going through the API? Open a SQL shell inside the container:
+
+```bash
+docker exec -it xsaved-rag-db psql -U xsaved -d xsaved_rag
+```
+
+Useful meta-commands: `\dt` (list tables), `\d bookmarks` (describe), `\q` (quit). Quick sanity check:
+
+```sql
+SELECT count(*) FROM bookmarks;
+SELECT id, author, left(text, 80) FROM bookmarks LIMIT 10;
+```
+
+The keyword leg as raw SQL (this is what the app's `keywordSearch` runs under the hood):
+
+```sql
+SELECT b.id, b.author, left(b.text, 120) AS text,
+       ts_rank_cd(b.text_search, q) AS score
+FROM bookmarks b, to_tsquery('english', 'car | cars') q
+WHERE b.text_search @@ q
+ORDER BY score DESC
+LIMIT 20;
+```
+
+(Dumb-but-simple alternative: `... WHERE text ILIKE '%car%'`.)
+
 You can also search straight from the CLI without the HTTP server:
 
 ```bash
